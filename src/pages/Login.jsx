@@ -10,15 +10,14 @@ import { toast } from "sonner";
 export default function Login() {
   const { login } = useAuth();
   const nav = useNavigate();
-  const [email, setEmail] = useState("admin@salon.com");
-  const [password, setPassword] = useState("123456");
+  const [user, setUser] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(email, password);
+      await login(user.email, user.password);
       toast.success("Bem-vinda!");
       nav("/");
     } catch (err) {
@@ -62,11 +61,11 @@ export default function Login() {
           <div className="space-y-3">
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" data-testid="login-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Input id="email" data-testid="login-email" type="email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} required />
             </div>
             <div>
               <Label htmlFor="password">Senha</Label>
-              <Input id="password" data-testid="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <Input id="password" data-testid="login-password" type="password" value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} required />
             </div>
           </div>
           <Button data-testid="login-submit" type="submit" disabled={loading} className="w-full bg-[#84A59D] hover:bg-[#6F9189] text-white">

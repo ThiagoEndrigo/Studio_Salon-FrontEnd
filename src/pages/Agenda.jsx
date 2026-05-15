@@ -37,7 +37,7 @@ export default function Agenda() {
   const nav = useNavigate();
 
   const loadDay = (d) => http.get("/agendamentos", { params: { data: d } }).then((r) => setAgendamentos(r.data || []));
-  
+
   const loadMonth = (y, m) => {
     const ms = `${y}-${String(m).padStart(2, "0")}`;
     return http.get("/agendamentos", { params: { mes: ms } }).then((r) => {
@@ -95,7 +95,7 @@ export default function Agenda() {
       loadDay(data);
       loadMonth(monthCursor.y, monthCursor.m);
     } catch (e) {
-      toast.error("Erro ao salvar agendamento");
+      toast.error(e.response.data.detail || "Erro ao salvar agendamento");
     }
   };
 
@@ -112,7 +112,7 @@ export default function Agenda() {
       setOpenSenha(true);
       return;
     }
-    
+
     if (status === "concluido") {
       try {
         const agendamentoResponse = await http.get(`/agendamentos/${id}`);
@@ -136,7 +136,7 @@ export default function Agenda() {
       }
       return;
     }
-    
+
     try {
       await http.post(`/agendamentos/${id}/status`, { status });
       toast.success("Status atualizado");
@@ -155,7 +155,7 @@ export default function Agenda() {
       toast.error("Digite sua senha");
       return;
     }
-    
+
     setCarregandoSenha(true);
     try {
       console.log("Alterando status com credenciais...");
@@ -325,7 +325,7 @@ export default function Agenda() {
                 return (
                   <button
                     key={day}
-                    onClick={() => setData(toDateInput(new Date(monthCursor.y, monthCursor.m - 1, day)))} 
+                    onClick={() => setData(toDateInput(new Date(monthCursor.y, monthCursor.m - 1, day)))}
                     className={`month-day ${isToday ? "month-day-today" : ""}`}
                   >
                     <div className="month-day-number">{day}</div>
@@ -414,7 +414,13 @@ export default function Agenda() {
 
               <div className="form-group mb-4">
                 <Label className="form-label">Observações</Label>
-                <Textarea rows={2} value={form.observacoes} onChange={(e) => setForm({ ...form, observacoes: e.target.value })} className="form-input" />
+                <Textarea
+                  rows={2}
+                  value={form.observacoes}
+                  onChange={(e) => setForm({ ...form, observacoes: e.target.value })}
+                  className="form-input"
+                  style={{ resize: "none" }}
+                />
               </div>
 
               <div className="total-box">

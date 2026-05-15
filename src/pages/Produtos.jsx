@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Package, Plus, Edit2, Trash2, AlertTriangle, Percent } from "lucide-react";
 import { toast } from "sonner";
 
-const blank = { nome: "", categoria: "", unidade_medida: "un", quantidade_estoque: 0, estoque_minimo: 5, custo_unitario: 0, preco_venda: 0, fornecedor: "", ativo: true, percentual_comissao: 0 };
+const blank = { nome: "", categoria: "", unidade_medida: "un", quantidade_estoque: 0, estoque_minimo: 5, custo_unitario: 0, preco_venda: 0, fornecedor: "", ativo: true, comissao: 0 };
 const fmtBRL = (n) => (n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Produtos() {
@@ -26,7 +26,7 @@ export default function Produtos() {
         estoque_minimo: Number(form.estoque_minimo),
         custo_unitario: Number(form.custo_unitario),
         preco_venda: Number(form.preco_venda),
-        percentual_comissao: Number(form.percentual_comissao || 0),
+        comissao: Number(form.comissao || 0),
       };
       if (form.id) await http.put(`/produtos/${form.id}`, p); else await http.post("/produtos", p);
       toast.success("Salvo"); setOpen(false); setForm(blank); load();
@@ -62,7 +62,7 @@ export default function Produtos() {
             <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg">
               <Label className="text-blue-800 flex items-center gap-1 mb-1"><Percent className="w-3 h-3" /> Comissão por Venda</Label>
               <div className="flex items-center gap-2">
-                <Input type="number" step="0.1" value={form.percentual_comissao} onChange={(e) => setForm({ ...form, percentual_comissao: e.target.value })} className="bg-white" />
+                <Input type="number" step="0.1" value={form.comissao} onChange={(e) => setForm({ ...form, comissao: e.target.value })} className="bg-white" />
                 <span className="text-sm text-blue-600 font-medium">%</span>
               </div>
               <p className="text-[10px] text-blue-500 mt-1">Percentual que o colaborador ganhará ao vender este produto.</p>
@@ -103,9 +103,9 @@ export default function Produtos() {
                     </td>
                     <td className="px-4 py-3 text-right font-medium">{fmtBRL(p.preco_venda)}</td>
                     <td className="px-4 py-3 text-center">
-                      {p.percentual_comissao > 0 ? (
+                      {p.comissao > 0 ? (
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                          {p.percentual_comissao}%
+                          {p.comissao}%
                         </span>
                       ) : (
                         <span className="text-zinc-400">-</span>
